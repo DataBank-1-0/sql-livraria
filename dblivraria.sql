@@ -4,39 +4,33 @@
 -- Criar banco de dados
 CREATE DATABASE livraria;
 
--- Criar tabela de livros
-CREATE TABLE livros (
-    ID_Livro INT PRIMARY KEY,
-    Titulo VARCHAR(255),
-    Autor VARCHAR(255),
-    Editora VARCHAR(255),
-    Endereço_Editora VARCHAR(255),
-    Categpria VARCHAR(255)
-);
+-- Após criar o banco de dados, conecte-se a ele:
+-- \c livraria;
 
 -- Criar tabela de editoras
 CREATE TABLE Editoras (
-ID_Editoras SERIAL PRIMARY KEY,
-Nome VARCHAR(255),
-Endereço VARCHAR(255)
+    ID_Editoras SERIAL PRIMARY KEY,
+    Nome VARCHAR(255) NOT NULL,
+    Endereco VARCHAR(255)
 );
-ALTER TABLE livros 
-ADD COLUMN ID_Editora INT REFERENCES
-Editoras(ID_Editoras);
-
-ALTER TABLE Livros
-DROP COLUMN Editora,
-DROP COLUMN Endereço_Editora;
 
 -- Criar tabela de categorias
 CREATE TABLE Categorias (
-ID_Categoria SERIAL PRIMARY KEY,
-Nome VARCHAR(255)
+    ID_Categoria SERIAL PRIMARY KEY,
+    Nome VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE Livros
-ADD COLUMN ID_Categoria INT REFERENCES
-Categorias(ID_Categoria);
-
-ALTER TABLE Livros
-DROP COLUMN Categoria;
+-- Criar tabela de livros com as referências para editoras e categorias
+CREATE TABLE Livros (
+    ID_Livro SERIAL PRIMARY KEY,
+    Titulo VARCHAR(255) NOT NULL,
+    Autor VARCHAR(255) NOT NULL,
+    ID_Editora INT REFERENCES Editoras(ID_Editoras),
+    ID_Categoria INT REFERENCES Categorias(ID_Categoria)
+);
+-- Inserindo quatro livros fictícios
+INSERT INTO Livros (Titulo, Autor, ID_Editora, ID_Categoria) VALUES
+('As Aventuras de Matteo', 'Bebela', 1, 1),     -- Título com 'Matteo' como protagonista
+('O Enigma da Floresta', 'Matthew', 1, 2),             -- Autor é 'Matthew' (escritor)
+('O Mistério de Isabelle', 'Teteu', 2, 3),   -- Título com 'Isabelle' como protagonista
+('Luzes do Destino', 'Isabela', 2, 4);              -- Autor é 'Isabela' (escritora)
